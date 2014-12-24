@@ -32,8 +32,13 @@ func NewFleetAPIClient(path string) (client.API, error) {
   if dialUnix {
     ep.Host = "domain-sock"
     ep.Scheme = "http"
+
+    sockPath := ep.Path
+
+    ep.Path = ""
+
     dialFunc = func(string, string) (net.Conn, error) {
-      return net.Dial("unix", ep.Path)
+      return net.Dial("unix", sockPath)
     }
   }
 
