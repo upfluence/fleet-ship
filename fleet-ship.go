@@ -119,6 +119,8 @@ func main() {
       c.JSON(500, gin.H{"error":err.Error()})
     }
 
+    waitUntilTargetStateReached(cl, name, string(job.JobStateInactive))
+
     err = cl.SetUnitTargetState(name, string(job.JobStateLaunched))
 
     RenderJSONOrError(c, map[string]bool{"success":true}, err)
