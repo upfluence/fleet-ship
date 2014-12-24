@@ -1,0 +1,82 @@
+{
+	"ImportPath": "github.com/upfluence/fleet-ship",
+	"GoVersion": "go1.3.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/coreos/fleet/client",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/etcd",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/job",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/log",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/machine",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/pkg",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/registry",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/schema",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/fleet/unit",
+			"Comment": "v0.3.2-1023-g1b9073c",
+			"Rev": "1b9073ca18676d5e32bca6901e6dd765d66b7c2b"
+		},
+		{
+			"ImportPath": "github.com/coreos/go-semver/semver",
+			"Rev": "6fe83ccda8fb9b7549c9ab4ba47f47858bc950aa"
+		},
+		{
+			"ImportPath": "github.com/coreos/go-systemd/unit",
+			"Comment": "v2-41-g415a79c",
+			"Rev": "415a79c4bfa377b484b16c632347b3925a0f35ff"
+		},
+		{
+			"ImportPath": "github.com/docker/libcontainer/netlink",
+			"Comment": "v1.4.0-34-g9455a8c",
+			"Rev": "9455a8ce3aaccceb4c282ef6c84d7edb36dd0d4c"
+		},
+		{
+			"ImportPath": "github.com/gin-gonic/gin",
+			"Comment": "v0.4-8-g3b079bb",
+			"Rev": "3b079bb6f79ae501e73a5401c41b589f6616b61e"
+		},
+		{
+			"ImportPath": "github.com/jonboulle/clockwork",
+			"Rev": "3f831b65b61282ba6bece21b91beea2edc4c887a"
+		},
+		{
+			"ImportPath": "github.com/julienschmidt/httprouter",
+			"Rev": "91101d17f079ca3c05c6e00354e914a35aa0d3e7"
+		},
+		{
+			"ImportPath": "google.golang.org/api/googleapi",
+			"Rev": "aa91ac681e18e52b1a0dfe29b9d8354e88c0dcf5"
+		}
+	]
+}
