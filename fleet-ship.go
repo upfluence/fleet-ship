@@ -78,7 +78,7 @@ func main() {
   routerGroup := routerEngine.RouterGroup
 
   if endpoint == "" {
-    endpoint = "unix:///var/run/fleet.sockt"
+    endpoint = "unix:///var/run/fleet.sock"
   }
 
   if os.Getenv("BASIC_USERNAME") != "" || os.Getenv("BASIC_PASSWORD") != "" {
