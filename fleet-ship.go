@@ -124,11 +124,13 @@ func main() {
 			c.JSON(500, gin.H{"error": err.Error()})
 		}
 
-		waitUntilTargetStateReached(cl, name, string(job.JobStateInactive))
+		go func() {
+			waitUntilTargetStateReached(cl, name, string(job.JobStateLoaded))
 
-		err = cl.SetUnitTargetState(name, string(job.JobStateLaunched))
+			cl.SetUnitTargetState(name, string(job.JobStateLaunched))
+		}()
 
-		RenderJSONOrError(c, map[string]bool{"success": true}, err)
+		c.JSON(200, "Deployment asked")
 	})
 
 	routerGroup.PUT("/rebalance/:name", func(c *gin.Context) {
@@ -142,11 +144,13 @@ func main() {
 			c.JSON(500, gin.H{"error": err.Error()})
 		}
 
-		waitUntilTargetStateReached(cl, name, string(job.JobStateInactive))
+		go func() {
+			waitUntilTargetStateReached(cl, name, string(job.JobStateInactive))
 
-		err = cl.SetUnitTargetState(name, string(job.JobStateLaunched))
+			cl.SetUnitTargetState(name, string(job.JobStateLaunched))
+		}()
 
-		RenderJSONOrError(c, map[string]bool{"success": true}, err)
+		c.JSON(200, "Rebalancing asked")
 	})
 
 	routerEngine.Run(":8080")
