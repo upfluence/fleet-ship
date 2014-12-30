@@ -14,14 +14,15 @@
 package main
 
 import (
-	"github.com/coreos/fleet/client"
-	"github.com/coreos/fleet/job"
-	"github.com/gin-gonic/gin"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"time"
+  "strings"
+	"github.com/coreos/fleet/client"
+	"github.com/coreos/fleet/job"
+	"github.com/gin-gonic/gin"
 )
 
 func NewFleetAPIClient(path string) (client.API, error) {
@@ -73,6 +74,14 @@ func waitUntilTargetStateReached(client client.API, name, state string) {
 	}
 }
 
+func normalizeName(name string) string {
+  if strings.HasSuffix(name, ".service") {
+    return name
+  } else {
+    return name + ".service"
+  }
+}
+
 func main() {
 	endpoint := os.Getenv("FLEET_ENDPOINT")
 
@@ -102,7 +111,7 @@ func main() {
 	})
 
 	routerGroup.GET("/units/:name", func(c *gin.Context) {
-		unit, err := cl.Unit(c.Params.ByName("name"))
+		unit, err := cl.Unit(normalizeName(c.Params.ByName("name")))
 
 		RenderJSONOrError(c, unit, err)
 	})
@@ -116,7 +125,7 @@ func main() {
 	routerGroup.PUT("/deploy/:name", func(c *gin.Context) {
 		var err error
 
-		name := c.Params.ByName("name")
+		name := normalizeName(c.Params.ByName("name"))
 
 		err = cl.SetUnitTargetState(name, string(job.JobStateLoaded))
 
@@ -136,7 +145,7 @@ func main() {
 	routerGroup.PUT("/rebalance/:name", func(c *gin.Context) {
 		var err error
 
-		name := c.Params.ByName("name")
+		name := normalizeName(c.Params.ByName("name"))
 
 		err = cl.SetUnitTargetState(name, string(job.JobStateInactive))
 
