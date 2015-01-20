@@ -1,10 +1,8 @@
-FROM golang:1.3.3
+FROM busybox
 MAINTAINER Alexis Montagne <alexis.montagne@gmail.com>
 
 EXPOSE 8080
 
-COPY . /go/app
+COPY fleet-ship /fleet-ship
 
-ENV GOPATH=/go/app/Godeps/_workspace
-
-CMD go run /go/app/fleet-ship.go
+CMD /fleet-ship

@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export GOPATH=`pwd`/Godeps/_workspace:$GOPATH
+
+GOOS=linux CGO_ENABLED=0 GOARCH=amd64 go build -o fleet-ship
+
+docker build -t upfluence/fleet-ship .
