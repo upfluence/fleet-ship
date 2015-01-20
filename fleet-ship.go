@@ -14,15 +14,16 @@
 package main
 
 import (
+	"errors"
+	"github.com/coreos/fleet/client"
+	"github.com/coreos/fleet/job"
+	"github.com/gin-gonic/gin"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
-  "strings"
-	"github.com/coreos/fleet/client"
-	"github.com/coreos/fleet/job"
-	"github.com/gin-gonic/gin"
 )
 
 func NewFleetAPIClient(path string) (client.API, error) {
@@ -60,6 +61,16 @@ func RenderJSONOrError(c *gin.Context, value interface{}, err error) {
 	}
 }
 
+func assertUnitExistence(client client.API, name string) error {
+	unit, err := client.Unit(name)
+
+	if err == nil && unit == nil {
+		err = errors.New("The unit does not exist")
+	}
+
+	return err
+}
+
 func waitUntilTargetStateReached(client client.API, name, state string) {
 	sleep := 500 * time.Millisecond
 
@@ -75,11 +86,11 @@ func waitUntilTargetStateReached(client client.API, name, state string) {
 }
 
 func normalizeName(name string) string {
-  if strings.HasSuffix(name, ".service") {
-    return name
-  } else {
-    return name + ".service"
-  }
+	if strings.HasSuffix(name, ".service") {
+		return name
+	} else {
+		return name + ".service"
+	}
 }
 
 func main() {
@@ -124,12 +135,13 @@ func main() {
 
 	routerGroup.PUT("/deploy/:name", func(c *gin.Context) {
 		var err error
-
 		name := normalizeName(c.Params.ByName("name"))
 
-		err = cl.SetUnitTargetState(name, string(job.JobStateLoaded))
+		if err = assertUnitExistence(cl, name); err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+		}
 
-		if err != nil {
+		if err = cl.SetUnitTargetState(name, string(job.JobStateLoaded)); err != nil {
 			c.JSON(500, gin.H{"error": err.Error()})
 		}
 
@@ -146,6 +158,10 @@ func main() {
 		var err error
 
 		name := normalizeName(c.Params.ByName("name"))
+
+		if err = assertUnitExistence(cl, name); err != nil {
+			c.JSON(500, gin.H{"error": err.Error()})
+		}
 
 		err = cl.SetUnitTargetState(name, string(job.JobStateInactive))
 
