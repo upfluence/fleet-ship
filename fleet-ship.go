@@ -15,6 +15,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"log"
 	"os"
 	"strings"
 )
@@ -76,17 +77,42 @@ func main() {
 	})
 
 	routerGroup.PUT("/deploy/:name", func(c *gin.Context) {
-		for _, unit := range cl.FindMatchingUnits(normalizeName(c.Params.ByName("name"))) {
-			go cl.RestartUnit(unit)
-		}
+		log.Printf("Deploy asked for %s", normalizeName(c.Params.ByName("name")))
 
+		log.Printf(
+			"Deploy wil be done on %s",
+			strings.Join(
+				cl.FindMatchingUnits(normalizeName(c.Params.ByName("name"))),
+				"",
+			),
+		)
+
+		go func() {
+			for _, unit := range cl.FindMatchingUnits(normalizeName(c.Params.ByName("name"))) {
+				log.Printf("prepare restart on %s", unit)
+				cl.RestartUnit(unit)
+			}
+		}()
 		c.JSON(200, "Deployment asked")
 	})
 
 	routerGroup.PUT("/rebalance/:name", func(c *gin.Context) {
-		for _, unit := range cl.FindMatchingUnits(normalizeName(c.Params.ByName("name"))) {
-			go cl.RebalanceUnit(unit)
-		}
+		log.Printf("Rebalance asked for %s", normalizeName(c.Params.ByName("name")))
+
+		log.Printf(
+			"Rebalance wil be done on %s",
+			strings.Join(
+				cl.FindMatchingUnits(normalizeName(c.Params.ByName("name"))),
+				"",
+			),
+		)
+
+		go func() {
+			for _, unit := range cl.FindMatchingUnits(normalizeName(c.Params.ByName("name"))) {
+				log.Printf("prepare restart on %s", unit)
+				cl.RebalanceUnit(unit)
+			}
+		}()
 
 		c.JSON(200, "Rebalancing asked")
 	})

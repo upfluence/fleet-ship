@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"github.com/coreos/fleet/client"
 	"github.com/coreos/fleet/job"
+	"log"
 	"net"
 	"net/http"
 	"net/url"
 	"regexp"
+	"strings"
 	"time"
 )
 
@@ -75,7 +77,9 @@ func (c *FleetClient) SubUnits(name string) ([]string, error) {
 		return []string{}, err
 	}
 
-	subUnitRegexp, err := regexp.Compile(fmt.Sprintf("^%s@.+", name))
+	subUnitRegexp, err := regexp.Compile(
+		fmt.Sprintf("^%s@.+", strings.TrimSuffix(name, ".service")),
+	)
 
 	if err != nil {
 		return []string{}, err
@@ -98,6 +102,19 @@ func (c *FleetClient) WaitUntilTargetStateReached(name, state string) {
 	for {
 		unit, err := (*c.Client).Unit(name)
 
+		if err != nil {
+			log.Printf("Error  during the wait %s", err.Error())
+		}
+
+		if unit != nil {
+			log.Printf(
+				"Current state of %s is %s but the wanted is %s",
+				unit.Name,
+				unit.CurrentState,
+				state,
+			)
+		}
+
 		if err == nil && unit.CurrentState == state {
 			return
 		}
@@ -114,6 +131,8 @@ func (c *FleetClient) SwapStateUnit(name string, beforeState, afterState job.Job
 	c.WaitUntilTargetStateReached(name, string(beforeState))
 
 	if err := (*c.Client).SetUnitTargetState(name, string(afterState)); err != nil {
+		log.Printf("Moving %s to the %s state : failed because %s", name, string(afterState), err.Error())
+
 		return err
 	}
 
