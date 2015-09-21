@@ -78,7 +78,7 @@ func (c *FleetClient) SubUnits(name string) ([]string, error) {
 	}
 
 	subUnitRegexp, err := regexp.Compile(
-		fmt.Sprintf("^%s@.+", strings.TrimSuffix(name, ".service")),
+		fmt.Sprintf("^%s(@.+)?", strings.TrimSuffix(name, ".service")),
 	)
 
 	if err != nil {
