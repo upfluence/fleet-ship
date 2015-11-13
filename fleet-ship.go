@@ -14,10 +14,11 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"log"
 	"os"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func RenderJSONOrError(c *gin.Context, value interface{}, err error) {
@@ -49,14 +50,9 @@ func main() {
 		endpoint = "unix://var/run/fleet.sock"
 	}
 
-	if os.Getenv("BASIC_USERNAME") != "" || os.Getenv("BASIC_PASSWORD") != "" {
-		routerGroup = routerEngine.Group(
-			"/",
-			gin.BasicAuth(gin.Accounts{
-				os.Getenv("BASIC_USERNAME"): os.Getenv("BASIC_PASSWORD"),
-			}),
-		)
-	}
+	routerGroup.GET("/healthcheck", func(c *gin.Context) {
+		c.String(200, "ok")
+	})
 
 	routerGroup.GET("/machines", func(c *gin.Context) {
 		machines, err := (*cl.Client).Machines()
