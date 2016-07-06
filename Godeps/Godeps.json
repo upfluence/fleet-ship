@@ -71,6 +71,10 @@
 			"Rev": "3f831b65b61282ba6bece21b91beea2edc4c887a"
 		},
 		{
+			"ImportPath": "github.com/jpillora/backoff",
+			"Rev": "2ff7c4694083b5dbd71b21fd7cb7577477a74b31"
+		},
+		{
 			"ImportPath": "github.com/julienschmidt/httprouter",
 			"Rev": "91101d17f079ca3c05c6e00354e914a35aa0d3e7"
 		},

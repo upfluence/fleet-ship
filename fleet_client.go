@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/coreos/fleet/client"
-	"github.com/coreos/fleet/job"
 	"log"
 	"net"
 	"net/http"
@@ -11,6 +9,10 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/coreos/fleet/client"
+	"github.com/coreos/fleet/job"
+	"github.com/jpillora/backoff"
 )
 
 type FleetClient struct {
@@ -97,7 +99,13 @@ func (c *FleetClient) SubUnits(name string) ([]string, error) {
 }
 
 func (c *FleetClient) WaitUntilTargetStateReached(name, state string) {
-	sleep := 500 * time.Millisecond
+	b := &backoff.Backoff{
+		//These are the defaults
+		Min:    500 * time.Millisecond,
+		Max:    10 * time.Second,
+		Factor: 2,
+		Jitter: false,
+	}
 
 	for {
 		unit, err := (*c.Client).Unit(name)
@@ -119,7 +127,11 @@ func (c *FleetClient) WaitUntilTargetStateReached(name, state string) {
 			return
 		}
 
-		time.Sleep(sleep)
+		if d := b.Duration(); d == 10*time.Second {
+			return
+		} else {
+			time.Sleep(d)
+		}
 	}
 }
 
